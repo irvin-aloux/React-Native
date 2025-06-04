@@ -96,6 +96,37 @@ app.delete("/api/transactions/:id", async (req, res) => {
   }
 })
 
+app.get("/api/transactions/summary/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const balanceResult = await sql`
+      SELECT COALESCE(SUM(amount), 0) AS balance FROM transactions WHERE user_id = ${userId}`;
+
+    const incomeResult = await sql`
+      SELECT COALESCE (SUM(amount), 0) AS income FROM transactions
+      WHERE user_id = ${userId} AND amount > 0
+    `;
+
+    const expenseResult = await sql`
+      SELECT COALESCE (SUM(amount), 0) AS expenses FROM transactions
+      WHERE user_id = ${userId} AND amount < 0
+    `;
+
+    res.status(200).json({
+      balance: balanceResult[0].balance,
+      income: incomeResult[0].income,
+      expenses: expenseResult[0].expenses
+    });
+
+
+  } catch (error) {
+    console.error("Error fetching transaction summary:", error);
+    res.status(500).json({ message: "Internal server error." });
+
+  }
+})
+
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Visit http://localhost:${PORT} to see the backend response.`);
