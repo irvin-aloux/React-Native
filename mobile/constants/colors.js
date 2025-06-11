@@ -27,7 +27,7 @@ const forestTheme = {
 
 const purpleTheme = {
   primary: "#6A1B9A",
-  background: "#F3E5F5",
+  background: "#8e01a2",
   text: "#4A148C",
   border: "#D1C4E9",
   white: "#FFFFFF",
@@ -59,4 +59,4 @@ export const THEMES = {
 };
 
 // 👇 change this to switch theme
-export const COLORS = THEMES.forest;
+export const COLORS = THEMES.coffee;
